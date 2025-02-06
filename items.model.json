@@ -1,0 +1,22 @@
+{
+    "itemId": "12345",
+    "userId" :"madhurendraPratap",
+    "name": "Laptop",
+    "category": "Electronics",
+    "description": "Dell Inspiron 15 5000, lightly used, good condition.",
+    "condition": "Used",
+    "price": 300,
+    "owner": "John Doe",
+    "state" : "acitve",
+    "status": "Available", 
+    "location": "NIT Agartala, Hostel Block 2",
+    "contect" : "99999999",
+    "featuredImage": "https://example.com/images/laptop.jpg",
+    "uploadDate": "2025-01-01T10:00:00Z",
+    "ownerContact": "john.doe@example.com",
+    "transactionHistory": [
+      {"action": "Item uploaded", "date": "2025-01-01T10:00:00Z"},
+      {"action": "Interested buyer", "date": "2025-01-03T14:00:00Z"}
+    ]
+  }
+  
