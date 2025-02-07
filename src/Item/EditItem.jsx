@@ -11,7 +11,8 @@ function EditItem() {
      const [featching , setFeactching]= useState(false)
     const navigate =     useNavigate();
     const [ doc , setDoc] = useState(null)
-
+    const userData = useSelector(state=>state.auth.userData)
+    
     const { register, handleSubmit } = useForm(
         {defaultValues : async ()=>{
           setFeactching(true)
@@ -20,6 +21,10 @@ function EditItem() {
             setFeactching(false)
             if(res.succes){
                 setDoc(res.data.documents[0])
+                if(doc && (doc.userId !== userData.userId)){
+                    
+                    navigate('/user')
+                }
                 setLoading((pre)=>(!pre))
                 return {...res.data.documents[0]}
             }else {
@@ -88,6 +93,7 @@ function EditItem() {
           <optgroup label="📚 Books & Study Material">
             <option value="textbooks">Textbooks</option>
             <option value="notebooks">Notebooks</option>
+            <option value="question-paper">Notebooks</option>
             <option value="reference-books">Reference Books</option>
             <option value="research-papers">Research Papers</option>
             <option value="stationery">Stationery Items</option>
