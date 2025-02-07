@@ -21,9 +21,8 @@ function EditItem() {
             setFeactching(false)
             if(res.succes){
                 setDoc(res.data.documents[0])
-                if(doc && (doc.userId !== userData.userId)){
-                    
-                    navigate('/user')
+               if(doc?.userId !== userData.$id ){
+                     navigate("/user")
                 }
                 setLoading((pre)=>(!pre))
                 return {...res.data.documents[0]}
