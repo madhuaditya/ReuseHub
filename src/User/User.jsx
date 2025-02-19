@@ -22,7 +22,7 @@ const UserPage = () => {
       }}>👤</div>
     
     {isOpen ?
-    <div className=" w-[50%] z-20 top-0 left-0 fixed" >
+    <div className=" w-[70%] z-20 top-0 left-0 fixed" >
       <Slider  /> 
     </div>
     :null}
