@@ -67,10 +67,11 @@ function ItemDetail() {
     };
 
     return (
-        item?(<div className="max-w-2xl mx-auto h-screen   bg-gray-900 shadow-lg rounded-lg overflow-hidden p-2">
+        item?(<div className="max-w-2xl mx-auto h-screen   bg-gray-900 shadow-lg rounded-lg overflow-auto p-2">
         
        {  !previwe ? 
        <div className='my-6  bg-white p-4 rounded-2xl py-6 '>
+          <div className="flex justify-center items-center">
            <img 
            onClick={()=>{
             setImagePreview(true)
@@ -79,6 +80,7 @@ function ItemDetail() {
                 alt={item.name} 
                 className=" max-h-[600px] object-cover rounded-md" 
             />
+          </div>
             <div className="p-4">
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">{item.name}</h2>
                 <p className="text-gray-600 text-sm mb-4"><strong>Category:</strong> {item.category}</p>
