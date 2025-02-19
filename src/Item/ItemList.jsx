@@ -3,16 +3,14 @@ import service from "../appwrite/manage";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Loading";
-import {  useForm } from "react-hook-form";
-
+import { FaFilter } from "react-icons/fa";
+import Select from "./Select";
 const ItemList = () => {
- 
 
+const ref = useRef(); 
 const navigate = useNavigate();
   const userData = useSelector(state => state.auth.userData);
-  const [value , setValue]= useState("10000")
 
-  const {register ,handleSubmit }= useForm()
 
   const [filter, setFilter] = useState({
     category: [
@@ -31,10 +29,14 @@ const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  
+  const [toggle , setToggle]= useState(false);
+  const changeToggle =()=>{
+    setToggle((prev)=>(!prev))
+  }
   const isFetching = useRef(false); // Prevent multiple requests
   
-  const fileterData = async (data) => {
+  function setValues   (data)  {
+    console.log(data);
     setItems([])
     setPage(0)
     setHasMore(true)
@@ -59,10 +61,6 @@ const navigate = useNavigate();
   
     isFetching.current = true; // Mark as fetching
     setLoading(true);
-
-    // console.log("Laoded again")
-
-
     try {
       const response = await service.getAllItemNotUser(userData.$id, page, filter.category, filter.price);
       if (response.success) {
@@ -75,7 +73,6 @@ const navigate = useNavigate();
     } catch (error) {
       console.error("Error fetching items:", error);
     }
-  
     setLoading(false);
     isFetching.current = false; // Mark as done fetching
   };
@@ -84,9 +81,7 @@ const navigate = useNavigate();
 
   return (
    <>
-
-
-   <main className="flex-1 mx-6 bg-white p-6 rounded-lg shadow-lg">
+   <main className="flex-1  md:mx-4 2xl:mx-6 bg-white p-6 rounded-lg shadow-lg">
         
         <h2 className="text-xl font-bold mb-4">Your Listed Items  </h2>
         {/* Scrollable Container */}
@@ -148,82 +143,20 @@ const navigate = useNavigate();
      :<Loading/>   }
       </main>
 
-      <aside className="w-1/4 bg-white p-4 rounded-lg shadow-lg">
+        {/*  filter form */}
+
+      <aside className="w-1/4 hidden 2xl:block bg-white p-4 rounded-lg shadow-lg">
         <h2 className="text-xl font-bold mb-4">Filter Items</h2>
-          <form onSubmit={handleSubmit(fileterData)}>
-          <label className="block mb-2">Category</label>
-          <select {...register("category")} className="w-full p-2 border rounded-lg">
-            <option value={JSON.stringify([
-              "textbooks", "notebooks", "reference-books", "research-papers", "stationery",
-              "laptops", "mobile-phones", "headphones", "smartwatches", "chargers-cables",
-              "furniture", "kitchen-utensils", "room-decor", "storage-boxes",
-              "jackets-hoodies", "shoes-footwear", "bags-backpacks", "watches-jewelry",
-              "musical-instruments", "gaming-consoles", "board-games", "cameras",
-              "bicycles", "dumbbells-weights", "sports-kits", "yoga-mats",
-              "helmets", "travel-bags", "raincoats", "sleeping-bags"
-            ])}>All</option>
-
-            <optgroup label="📚 Books & Study Material">
-              <option value={JSON.stringify(["textbooks"])}>Textbooks</option>
-              <option value={JSON.stringify(["notebooks"])}>Notebooks</option>
-              <option value={JSON.stringify(["question-paper"])}>Question Paper</option>
-              <option value={JSON.stringify(["reference-books"])}>Reference Books</option>
-              <option value={JSON.stringify(["research-papers"])}>Research Papers</option>
-              <option value={JSON.stringify(["stationery"])}>Stationery Items</option>
-            </optgroup>
-
-            <optgroup label="💻 Electronics & Gadgets">
-              <option value={JSON.stringify(["laptops"])}>Laptops</option>
-              <option value={JSON.stringify(["mobile-phones"])}>Mobile Phones</option>
-              <option value={JSON.stringify(["headphones"])}>Headphones</option>
-              <option value={JSON.stringify(["smartwatches"])}>Smartwatches</option>
-              <option value={JSON.stringify(["chargers-cables"])}>Chargers & Cables</option>
-            </optgroup>
-
-            <optgroup label="🏠 Household & Essentials">
-              <option value={JSON.stringify(["furniture"])}>Furniture (Chairs, Tables, Beds)</option>
-              <option value={JSON.stringify(["kitchen-utensils"])}>Kitchen Utensils</option>
-              <option value={JSON.stringify(["room-decor"])}>Room Decor</option>
-              <option value={JSON.stringify(["storage-boxes"])}>Storage Boxes</option>
-            </optgroup>
-
-            <optgroup label="👕 Clothing & Accessories">
-              <option value={JSON.stringify(["jackets-hoodies"])}>Jackets & Hoodies</option>
-              <option value={JSON.stringify(["shoes-footwear"])}>Shoes & Footwear</option>
-              <option value={JSON.stringify(["bags-backpacks"])}>Bags & Backpacks</option>
-              <option value={JSON.stringify(["watches-jewelry"])}>Watches & Jewelry</option>
-            </optgroup>
-
-            <optgroup label="🎮 Entertainment & Hobbies">
-              <option value={JSON.stringify(["musical-instruments"])}>Musical Instruments</option>
-              <option value={JSON.stringify(["gaming-consoles"])}>Gaming Consoles</option>
-              <option value={JSON.stringify(["board-games"])}>Board Games</option>
-              <option value={JSON.stringify(["cameras"])}>Cameras</option>
-            </optgroup>
-
-            <optgroup label="🚴 Sports & Fitness">
-              <option value={JSON.stringify(["bicycles"])}>Bicycles</option>
-              <option value={JSON.stringify(["dumbbells-weights"])}>Dumbbells & Weights</option>
-              <option value={JSON.stringify(["sports-kits"])}>Badminton & Cricket Kits</option>
-              <option value={JSON.stringify(["yoga-mats"])}>Yoga Mats</option>
-            </optgroup>
-
-            <optgroup label="🚗 Travel & Commuting">
-              <option value={JSON.stringify(["helmets"])}>Helmets</option>
-              <option value={JSON.stringify(["travel-bags"])}>Travel Bags</option>
-              <option value={JSON.stringify(["raincoats"])}>Raincoats</option>
-              <option value={JSON.stringify(["sleeping-bags"])}>Sleeping Bags</option>
-            </optgroup>
-          </select>
-
-     
-        <label className="block mt-4 mb-2">Price Range</label>
-        <input {...register ("price")} type="range" onChange={(e)=>(setValue(e.target.value))} className="w-full" min="0" max="5000" defaultValue={"5000"} />
-          <span> value : {value}</span>
-        <button disabled={loading} type="submit" className="w-full mt-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">{loading?"Loading...":"Apply Filters"}</button>
-          </form>
-         
+          <Select setValues={setValues} ref={ref} loading={loading}></Select>
       </aside>
+      <div className="2xl:hidden z-1 flex items-center justify-center fixed right-2 bottom-6 rounded-full h-12 w-12 bg-blue-200">
+      <div className="" onClick={()=>(changeToggle())}>
+      <FaFilter size={20} />
+      </div>
+      <div className={`2xl:hidden  ${toggle? "block": "hidden"}   z-20 flex p-4 justify-center fixed right-0 top-0 rounded-l-2xl h-screen w-[60%] md:w-[30%] bg-white`}>
+      <Select setValues={setValues} ref={ref} loading={loading} changeToggle={changeToggle}></Select>
+      </div>
+      </div>
    </>
   );
 };
