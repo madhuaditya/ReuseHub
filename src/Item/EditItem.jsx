@@ -2,17 +2,18 @@ import React ,{useState} from 'react'
 import serive from '../appwrite/manage'
 import {useForm} from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Slider from '../profile/Slider';
 import Loading from '../Loading'
+import { openChange } from '../stores/AuthSlice';
 function EditItem() {
+
     const {itemId} = useParams()
      const [loading, setLoading] = useState(false);
      const [featching , setFeactching]= useState(false)
     const navigate =     useNavigate();
     const [ doc , setDoc] = useState(null)
-    const userData = useSelector(state=>state.auth.userData)
-    
+
     const { register, handleSubmit } = useForm(
         {defaultValues : async ()=>{
           setFeactching(true)
@@ -21,9 +22,6 @@ function EditItem() {
             setFeactching(false)
             if(res.succes){
                 setDoc(res.data.documents[0])
-               if(doc?.userId !== userData.$id ){
-                     navigate("/user")
-                }
                 setLoading((pre)=>(!pre))
                 return {...res.data.documents[0]}
             }else {
@@ -75,11 +73,28 @@ function EditItem() {
         }
         setLoading((pre)=>(!pre))
       };
-    
 
+    const dispach = useDispatch()
+    const isOpen = useSelector(state=> state.auth.open);
   return (
     <div className="flex min-h-screen p-6 bg-gray-900">
-          <Slider key={"edit items set"} show={true} />
+      <div className="hidden md:block w-1/3 2xl:w-1/4">
+      <Slider></Slider>
+      </div>
+      <div   className=" fixed h-12 w-12 bg-blue-200  bottom-4 z-10 rounded-full md:hidden text-2xl p-1.5 shadow-gray-100" onClick={()=>{
+       
+        dispach(openChange())
+      }}>👤</div>
+    
+    {isOpen ?
+       <div className=" w-[50%] z-20 top-0 left-0 fixed" >
+      <Slider  /> 
+    </div>
+    :null}
+          
+         
+
+
     <main className="flex-1 mx-6 bg-white p-6 rounded-lg shadow-lg flex-col flex-grow overflow-y-auto max-h-[100vh] ">
     <h2 className="text-xl font-bold mb-4">Add New Item</h2>
       { featching?  <Loading></Loading> :  <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -92,7 +107,7 @@ function EditItem() {
           <optgroup label="📚 Books & Study Material">
             <option value="textbooks">Textbooks</option>
             <option value="notebooks">Notebooks</option>
-            <option value="question-paper">Notebooks</option>
+            <option value="question-paper">Question Paper</option>
             <option value="reference-books">Reference Books</option>
             <option value="research-papers">Research Papers</option>
             <option value="stationery">Stationery Items</option>
@@ -150,6 +165,7 @@ function EditItem() {
   <optgroup label="📖 Academic & Study">
     <option value="Textbooks">Textbooks</option>
     <option value="Notebooks">Notebooks</option>
+    <option value="question-paper">Question Paper</option>
     <option value="Stationery">Stationery</option>
     <option value="Research Papers">Research Papers</option>
     <option value="Exam Guides">Exam Guides</option>
