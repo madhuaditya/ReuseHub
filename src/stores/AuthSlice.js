@@ -5,6 +5,7 @@ const initialState = {
         userData : null,
         profile :null,
         items : [],
+        opne : false,
 }
 
 export  const AuthSlice = createSlice({
@@ -34,6 +35,10 @@ export  const AuthSlice = createSlice({
         itemsOut:(state)=>{
             state.items=[]
         } ,
+        openChange : (state)=>{
+            state.open = !(state.open)
+
+        },
 
     }
 }
@@ -41,4 +46,4 @@ export  const AuthSlice = createSlice({
 
 export default AuthSlice.reducer 
 
-export const {login, logout,profileIn,profileOut,itemsInsert,itemsOut} =AuthSlice.actions;
+export const {login, openChange, logout,profileIn,profileOut,itemsInsert,itemsOut} =AuthSlice.actions;
