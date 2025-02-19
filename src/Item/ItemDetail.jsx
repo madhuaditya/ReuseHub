@@ -67,9 +67,10 @@ function ItemDetail() {
     };
 
     return (
-        item?(<div className="max-w-2xl mx-auto   bg-white shadow-lg rounded-lg overflow-hidden p-6">
+        item?(<div className="max-w-2xl mx-auto h-screen   bg-gray-900 shadow-lg rounded-lg overflow-hidden p-2">
         
-       {  !previwe ? <div className='py-2 '>
+       {  !previwe ? 
+       <div className='my-6  bg-white p-4 rounded-2xl py-6 '>
            <img 
            onClick={()=>{
             setImagePreview(true)
@@ -85,7 +86,7 @@ function ItemDetail() {
                 <p className="text-gray-700 mb-2"><strong>Condition:</strong> {item.condition}</p>
                 <p className="text-gray-700 mb-2"><strong>Specifications:</strong> {item.spacification}</p>
                 <p className="text-gray-700 mb-2"><strong>Condition:</strong> {item.condition}</p>
-                <p className="text-green-600 text-lg font-semibold">Price: {item.price?`₹ ${item.price}`:""}</p>
+                <p className="text-green-600 text-lg font-semibold">Price: {item.price?`₹ ${item.price}`:"Free"}</p>
                 <p className="text-gray-700 mb-2"><strong>Owner:</strong> {item.owner}</p>
                 <p className="text-gray-700 mb-2"><strong>Location:</strong> {item.location}</p>
                 <p className="text-gray-700 mb-4"><strong>Contact:</strong> {item.contect}</p>
