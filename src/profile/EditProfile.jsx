@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { profileIn } from "../stores/AuthSlice";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import serive from "../appwrite/manage";
 import Slider from '../profile/Slider'
 import Loading from '../Loading'
+import { openChange } from "../stores/AuthSlice";
 const EditProfile = () => {
    const dispach = useDispatch()
    const [featching , setFeactching]= useState(false)
@@ -116,10 +117,25 @@ const [isprevier , setimg] = useState(null);
     }
     setLoading((pre)=>(!pre))
     };
+      const isOpen = useSelector(state=> state.auth.open);
+      
 
   return (
     <div className="flex min-h-screen p-6 bg-gray-900">
-    <Slider key={"edit item list "} show={true} />
+    <div className="hidden md:block w-1/3 2xl:w-1/4">
+      <Slider key={"edit items set"} show={true}></Slider>
+      </div>
+      <div   className=" fixed h-12 w-12 bg-blue-200  bottom-4 z-10 rounded-full text-2xl p-1.5 shadow-gray-100" onClick={()=>{
+        dispach(openChange())
+      }}>👤</div>
+    
+    {isOpen ?
+    <div className=" w-[50%] z-20 top-0 left-0 fixed" >
+      <Slider  /> 
+    </div>
+    :null}
+      
+
 
       <main className="flex-col max-h-screen flex-grow overflow-y-auto mx-6 bg-gray-200 p-6 rounded-lg shadow-lg">
                
