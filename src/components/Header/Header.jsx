@@ -1,13 +1,74 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import styled from "styled-components";
+import { FaBars } from "react-icons/fa";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, profileOut } from "../../stores/AuthSlice";
 import requests from "../../appwrite/reqest";
 import authService from "../../appwrite/auth";
-import { HiMenu, HiX } from "react-icons/hi";
+const StyledHeader = styled.header`
+  background-color: #1F2937;
+  width: 100%;
+  padding: 10px 2px 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .nav_logo {
+    padding: 0 12px;
+    .nav-logo-link {
+      text-decoration: none;
+      font-size: 24px;
+      color: #fab005;
+      font-weight: bold;
+    }
+  }
+  .menuToggleBtn {
+    display: none;
+    color: white;
+    font-size: 24px;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    cursor: pointer;
+  }
 
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    .menuToggleBtn {
+      display: block;
+    }
+  }
+`;
+const NavManu = styled.ul`
+  list-style: none;
+  display: flex;
 
-export default function Header() {
+  li {
+    &:hover {
+      cursor: pointer;
+      background: #44a8f4;
+      border-radius: 4px;
+    }
+  }
+  .nav-menu-list {
+    text-decoration: none;
+    color: white;
+    display: block;
+    padding: 10px 10px;
+  }
+  @media screen and (max-width: 768px) {
+    display: ${(props) => (props.isToggleOpen ? "block" : "none")};
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 5px;
+  }
+`;
+
+const Header = () => {
+  const [isToggleOpen, setIsToggleOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
@@ -26,26 +87,23 @@ export default function Header() {
     navigate("/login");
   };
 
-  //   console.log(window.location.pathname); //yields: "/js" (where snippets run)
-  // console.log(window.location.href); 
   const curr = String(window.location.pathname)
-  // console.log(curr)
+
+  const handleToggleOpen = () => {
+    setIsToggleOpen(!isToggleOpen);
+  };
   return (
-    <nav className="bg-gray-800 p-4 shadow-md">
-      <div className="container mx-auto flex justify-between items-center">
-        {/* Logo */}
-        <Link to="/" className="flex text-white text-2xl font-semibold">
-          ReuseHub
-          <img src="./ReuseHub.jpg" alt="" className="ml-3 w-10 rounded-md" />
-        </Link>
+    <>
+      <StyledHeader>
+        <div className="nav_logo">
+            <Link to="/" className="flex text-white text-2xl font-semibold">
+              ReuseHub
+            <img src="./ReuseHub.jpg" alt="" className="ml-3 w-10 rounded-md" />
+            </Link>
+        </div>
 
-        {/* Mobile Menu Button */}
-        <button className="text-white md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <HiX size={28} /> : <HiMenu size={28} />}
-        </button>
+        <NavManu isToggleOpen={isToggleOpen}>
 
-        {/* Navigation Links */}
-        <div className={`md:flex md:items-center space-x-4 ${menuOpen ? "block" : "hidden"} absolute md:static top-16 right-0 bg-gray-800 w-full md:w-auto md:bg-transparent z-10`}> 
           {isAuthenticated ? (
             <>
               <button
@@ -54,47 +112,48 @@ export default function Header() {
                   if (response.success) setYourItems(response.data);
                   setIsOpen(true);
                 }}
-                className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded"
+               className="nav-menu-list"
               >
                 Your Requests
               </button>
               {curr === "/user"?
             null  :
-            <Link to="/user" className="text-white bg-purple-600 hover:bg-purple-800 px-4 py-2 rounded">
+            <Link to="/user" className="nav-menu-list">
             User Page
           </Link>
             }
 
-           {window.location.pathname==="/add-item" ?null:   <Link to="/add-item" className="text-white bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded">
+           {window.location.pathname==="/add-item" ?null:   <Link to="/add-item" className="nav-menu-list">
                 Add Item
               </Link>}
 
-            {window.location.pathname=== "/profile"?null:  <Link to="/profile" className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">
+            {window.location.pathname=== "/profile"?null:  <Link to="/profile" className="nav-menu-list">
                 Profile
               </Link>}
 
               <button
                 onClick={handleLogout}
-                className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
+               className="  nav-menu-list"
+             
               >
                 {changing ? <span className="inline-block w-6 h-6 border-4 border-white border-dotted rounded-full animate-spin"></span> : "Logout"}
               </button>
             </>
-          ) : (
-            <>
-              <Link to="/login" className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">
-                Login
-              </Link>
-              <Link to="/signup" className="text-white bg-green-500 hover:bg-green-600 px-4 py-2 rounded">
-                Signup
-              </Link>
-            </>
-          )}
-        </div>
-      </div>
+             ) : (
+                          <>
+                            <Link to="/login" className="nav-menu-list">
+                              Login
+                            </Link>
+                            <Link to="/signup" className="nav-menu-list">
+                              Signup
+                            </Link>
+                          </>
+                        )}
+        </NavManu>
+        <FaBars className="menuToggleBtn" onClick={handleToggleOpen} />
 
-      {/* Requests Popup */}
-      {isOpen && (
+               {/* Requests Popup */}
+        {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-20" onClick={() => setIsOpen(false)}>
           <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md relative" onClick={(e) => e.stopPropagation()}>
             <button className="absolute top-2 right-2 text-gray-500 hover:text-red-500" onClick={() => setIsOpen(false)}>
@@ -127,6 +186,9 @@ export default function Header() {
           </div>
         </div>
       )}
-    </nav>
+      </StyledHeader>
+    </>
   );
-}
+};
+
+export default Header;
