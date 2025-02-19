@@ -167,7 +167,7 @@ export default function SignupMod() {
           <button
            disabled={loading}
             type="submit"
-            className="w-full text-white bg-blue  -600 hover:bg-blue-700 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700"
+            className="w-full text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700"
           >
            {loading?"Updating....": "Create Account"}
           </button>
