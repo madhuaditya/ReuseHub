@@ -33,38 +33,6 @@ function EditItem() {
         }
     });
     const [imagePreview, setImagePreview] = useState(null);
-
-  const onSubmit = async (data) => {
-    setFeactching(true)
-    setLoading((pre)=>(!pre))
-    // console.log("Form Data:", data);
-    
-    if(data.image[0]){
-      const upload = await serive.uploadFile(data.image[0])
-        const resposnce = await serive.updateItem(data.itemId, {...data , featuredImage: upload.data});
-        setFeactching(false)
-        if(resposnce.succes){
-            navigate("/user")
-        }else {
-          
-            alert(resposnce.message)
-        }
-    }
-    else {
-      setLoading((pre)=>(!pre))
-      const resposnce= await serive.updateItem(data.itemId, {...data , featuredImage: doc.featuredImage});
-      setFeactching(false)
-      if(resposnce.succes){
-        navigate("/user")
-    }else {
-      
-        alert(resposnce.message)
-    }
-    setLoading((pre)=>(!pre))
-    }
-    setLoading((pre)=>(!pre))
-    setFeactching(false)
-  }
     const handleImageChange = (e) => {
       setLoading((pre)=>(!pre))
         const file = e.target.files[0];
@@ -76,6 +44,43 @@ function EditItem() {
 
     const dispach = useDispatch()
     const isOpen = useSelector(state=> state.auth.open);
+
+        const userData = useSelector(state=> state.auth.userData);
+    const onSubmit = async (data) => {
+      setFeactching(true)
+      setLoading((pre)=>(!pre))
+      // console.log("Form Data:", data);
+    if(userData.userId!== data.userId){
+      alert("your can't change others data")
+      navigate("/user")
+    }
+      if(data.image[0]){
+        const upload = await serive.uploadFile(data.image[0])
+          const resposnce = await serive.updateItem(data.itemId, {...data , featuredImage: upload.data});
+          setFeactching(false)
+          if(resposnce.succes){
+              navigate("/user")
+          }else {
+            
+              alert(resposnce.message)
+          }
+      }
+      else {
+        setLoading((pre)=>(!pre))
+        const resposnce= await serive.updateItem(data.itemId, {...data , featuredImage: doc.featuredImage});
+        setFeactching(false)
+        if(resposnce.succes){
+          navigate("/user")
+      }else {
+        
+          alert(resposnce.message)
+      }
+      setLoading((pre)=>(!pre))
+      }
+      setLoading((pre)=>(!pre))
+      setFeactching(false)
+    }
+    
   return (
     <div className="flex min-h-screen p-6 bg-gray-900">
       <div className="hidden md:block w-1/3 2xl:w-1/4">
