@@ -5,8 +5,7 @@ import { useNavigate } from "react-router-dom"
 import profileManage from "../appwrite/profile"
 import request from "../appwrite/reqest"
 import { profileIn } from "../stores/AuthSlice"
-
-
+import { openChange } from "../stores/AuthSlice"
 function Slider({show=false}) {
     const navigate = useNavigate()
     const[pageLoading, setPageLoading]= useState(true);
@@ -16,10 +15,10 @@ function Slider({show=false}) {
     const [profile ,setProFile] = useState(null)
     const useData = useSelector(state=> state.auth.userData)
     const [visibleItems, setVisibleItems] = useState({}); // Track visibility for each item
-
+    
 
     const accept = async (item,itm)=>{
-   
+      setPageLoading(true)
       
       const res = await serive.sold(item.$id,itm.userId )
       await request.updateRequest(itm.$id,itm.userId);
@@ -29,12 +28,15 @@ function Slider({show=false}) {
           alert("Somthig Error")
         }
         setStatechate((prev)=>(!prev))
+        setPageLoading(()=> (false))
      }
 
      const reject=async( itm)=>{
+          setPageLoading(()=> (true))
            await request.deleteOneRequest(itm.$id)
-          alert("Item Rejected")
+          alert("Item Rejected successfully")
           setStatechate((prev)=>(!prev))
+          setPageLoading(()=> (false))
      }
 
    
@@ -91,26 +93,32 @@ function Slider({show=false}) {
     },[stateChange])
   return (
        <>
-        <aside className="w-1/4 bg-white p-4 rounded-lg shadow-lg">
-        <h2 className="text-xl font-bold mb-4">Profile Overview</h2>
+        <aside className="w-full h-screen bg-white p-4 rounded-lg shadow-lg">
+     <div className="flex justify-between">   <h2 className="text-xl font-bold mb-4">Profile Overview</h2> <span className="md:hidden" onClick={()=>(dispach(openChange()))}>❌</span></div>
+
        {!pageLoading?(
-        <div>
-             <img
+        <div className=" flex-col justify-center items- h-full">
+          <div className={"h-200w-full my-3"}>     <img
          src={profile?profile.featuredImage:"https://cdn-icons-png.flaticon.com/512/3135/3135715.png"}
          alt="Profile"
          className="rounded-full w-30 h-30 mx-auto mb-4"
        />
        <p className="text-center text-gray-700">{useData? useData.name : "Your Name"} </p>
        <p className="text-center text-gray-500 text-sm">{useData? useData.email : "Example@gmail.com"}</p>
-       <button onClick={()=>(navigate("/change-password"))} className="w-full mt-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 ">change Password</button>
-       {!show?<div className="w-full h-[400px] mt-2 rounded-lg border-2">
+        <button onClick={()=>(navigate("/change-password"))} className="w-full mt-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 ">change Password</button>
+        </div>
+        
+       {/**  list imtes widths 3/4 */}
+    
+       <div className=" max-h-600 m-6">
+       {!show?<div className="w-full mt-2 rounded-lg border-2">
            <h2 className="text-center text-amber-950">
            your items 
            </h2>
        
-          {loading?(<h1  className="text-center"> Loading Contest please Wait</h1>): (<div className=" flex-col flex-grow overflow-y-auto max-h-[370px] px-4 py-2">
+          {loading?(<h1  className="text-center"> Loading Contest please Wait</h1>): (<div className=" flex-col flex-grow overflow-y-auto  max-h-[370px] px-4 py-2">
               {userItems[0]?userItems.map((item)=>(
-                   <div key ={item.itemId} className="bg-gray-300  hover:bg-gray-200 rounded-2xl flex-col p-2 my-2" > 
+                   <div key ={item.itemId} className="bg-gray-300  hover:bg-gray-200 rounded-2xl flex-colp-2 my-2" > 
                     <div> <p  className="p-1.5">Name : {item.name}</p> 
 
                     </div>
@@ -153,6 +161,9 @@ function Slider({show=false}) {
                ) ):(<h1 className="text-center text-blue-600"> No item Added Yet</h1>)}
            </div>)}
        </div>:null}
+
+       </div>
+
         </div>
        ) :(<h1 className="text-2xl  text-center ">Loading</h1>)}
       </aside>
@@ -161,5 +172,3 @@ function Slider({show=false}) {
 }
 
 export default Slider
-
-
